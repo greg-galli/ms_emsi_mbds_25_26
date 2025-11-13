@@ -11,23 +11,23 @@ import java.util.Optional;
 
 @RestController
 public class CustomerController {
-    private final CustomerRepository customerRepository;
+    private final CustomerService customerService;
 
     @Autowired
-    public CustomerController(CustomerRepository customerRepository) {
-        this.customerRepository = customerRepository;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
     }
 
     @GetMapping("/customers/{customerId}")
     public Customer getCustomerById(@PathVariable Long customerId)
     {
-        return customerRepository.findById(customerId).orElse(null);
+        return customerService.getCustomerById(customerId);
     }
 
     @GetMapping("/customers")
     public List<Customer> getCustomers()
     {
-        return customerRepository.findAll();
+        return customerService.getCustomers();
     }
 
 }
