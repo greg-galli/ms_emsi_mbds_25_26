@@ -8,25 +8,30 @@ import java.util.List;
 @Service
 public class CustomerServiceImpl implements  CustomerService {
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
 
     @Autowired
-    public CustomerServiceImpl(CustomerRepository customerRepository) {
+    public CustomerServiceImpl(CustomerRepository customerRepository, CustomerMapper customerMapper) {
         this.customerRepository = customerRepository;
+        this.customerMapper = customerMapper;
     }
 
 
     @Override
-    public Customer getCustomerById(Long customerId) {
-        return customerRepository.findById(customerId).orElse(null);
+    public CustomerDTO getCustomerById(Long customerId) {
+        Customer customer = customerRepository.findById(customerId).orElse(null);
+        return customerMapper.toDTO(customer);
     }
 
     @Override
-    public List<Customer> getCustomers() {
-        return customerRepository.findAll();
+    public List<CustomerDTO> getCustomers() {
+        List<Customer> customerList = customerRepository.findAll();
+        return customerMapper.toDTOList(customerList);
     }
 
     @Override
-    public Customer createCustomer(Customer customer) {
-        return customerRepository.save(customer);
+    public CustomerDTO createCustomer(CustomerDTO customerDTO) {
+        Customer customer = customerRepository.save(customerMapper.toEntity(customerDTO));
+        return customerMapper.toDTO(customer);
     }
 }
